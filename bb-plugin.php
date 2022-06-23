@@ -113,26 +113,29 @@ class BBPlugin {
 
     /******************************* Creating new function for Statistics html ************************************/
     function create_html($content) {
-        $html = '<h3>' .get_option('wc_headline', 'Post Statistics'). '</h3><p>';
+        $html = '
+            <div style="background:#ccc; margin:10px; padding:20px; font-style:italic;">
+                <h3 style="border-bottom:1px solid #000; padding-bottom:10px;">' .get_option('wc_headline', 'Post Statistics'). '</h3>
+                    <p>';
 
-        // get word count once because both wordcount and read time will need it.
-        if(get_option('wc_wordcount', '1') OR get_option('wc_readtime', '1')) {
-            $wordcount = str_word_count(strip_tags($content));
-        }
+                    // get word count once because both wordcount and read time will need it.
+                    if(get_option('wc_wordcount', '1') OR get_option('wc_readtime', '1')) {
+                        $wordcount = str_word_count(strip_tags($content));
+                    }
 
-        if(get_option('wc_wordcount', '1')) {
-            $html .= 'This post has ' . $wordcount . ' words.</br>';
-        }
+                    if(get_option('wc_wordcount', '1')) {
+                        $html .= 'This post has ' . $wordcount . ' words.</br>';
+                    }
 
-        if(get_option('wc_charactercount', '1')) {
-            $html .= 'This post has ' . strlen(strip_tags($content)) . ' characters.</br>';
-        }
+                    if(get_option('wc_charactercount', '1')) {
+                        $html .= 'This post has ' . strlen(strip_tags($content)) . ' characters.</br>';
+                    }
 
-        if(get_option('wc_readtime', '1')) {
-            $html .= 'This post will take about ' . round($wordcount/255) . ' minute(s) to read.</br>';
-        }
+                    if(get_option('wc_readtime', '1')) {
+                        $html .= 'This post will take about ' . round($wordcount/255) . ' minute(s) to read.</br>';
+                    }
 
-        $html .= '</p>';
+        $html .= '</p></div>';
 
         if(get_option('wc_location', '0') == '0') {
             return $html . $content;
