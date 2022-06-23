@@ -38,6 +38,8 @@ class BBPlugin {
         add_action( 'wp_enqueue_scripts', array($this, 'enqueue') );
 
         add_filter( "plugin_action_links_" . PLUGIN, array( $this, 'settings_links' ) );
+
+        add_action( 'admin_menu', array($this, 'main_page') );
     }
 
     /****************************** Enqueue all styles and scripts *********************************/
