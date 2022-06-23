@@ -36,8 +36,10 @@ class BBPlugin {
     /****************************** Function for adding all actions and filters *********************************/
     function __construct() {
         add_action( 'wp_enqueue_scripts', array($this, 'enqueue') );
+
+        add_filter( "plugin_action_links_" . PLUGIN, array( $this, 'settings_links' ) );
     }
-    
+
     /****************************** Enqueue all styles and scripts *********************************/
     function enqueue() {
         wp_enqueue_style( 'bb-plugin-style', PLUGIN_URL . 'assets/css/style.css' );
@@ -47,6 +49,13 @@ class BBPlugin {
         wp_enqueue_script( 'popper', 'https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js' );
         wp_enqueue_script( 'bootstrap-min', 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js' );
         wp_enqueue_script( 'bootstrap-bundle', 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js' );
+    }
+    
+    /****************************** Callback function for adding settings links *********************************/
+    function settings_links($links) {
+        $settings =  '<a href="admin.php?page=bb_plugin">Settings</a>';
+        array_push( $links, $settings );
+        return $links;
     }
 
 }
