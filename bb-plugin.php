@@ -152,6 +152,18 @@ class BBPlugin {
     /****************************** settings, sections and fields for all pages *********************************/
     function settings() {
 
+        /****************************** settings, sections and fields for main page *********************************/
+        add_settings_section( 'bb_main_setting_section', null, null,'bb_main_setting' );
+
+        add_settings_field( 'bb_live_chat', 'Live Chat', array($this, 'bb_live_chat_html'), 'bb_main_setting', 'bb_main_setting_section' );
+        register_setting( 'bb_main_setting', 'bb_chat' );
+
+        add_settings_field( 'bb_cpt', 'CPT Manager', array($this, 'bb_cpt_html'), 'bb_main_setting', 'bb_main_setting_section' );
+        register_setting( 'bb_main_setting', 'bb_cpt' );
+
+        add_settings_field( 'bb_wordcount', 'Word Count', array($this, 'bb_wordcount_html'), 'bb_main_setting', 'bb_main_setting_section' );
+        register_setting( 'bb_main_setting', 'bb_wordcount' );
+
         /****************************** settings, sections and fields for live chat page *********************************/
         add_settings_section( 'bb_live_setting_section', null, null,'bb_live_setting' );
 
@@ -227,6 +239,22 @@ class BBPlugin {
         add_settings_field( 'supports', 'Supports <br>'. $caption, array($this, 'supports_html'), 'bb_cpt_setting', 'bb_cpt_setting_section' );
 
     }
+
+    /****************************** Callback functios for main page *********************************/
+    /****************************** Callback function for bb_live_chat *********************************/
+    function bb_live_chat_html() { ?>
+        <input type="checkbox" name="bb_chat" value="1" <?php checked(get_option('bb_chat'), '1'); ?>>
+    <?php }
+
+    /****************************** Callback function for bb_cpt *********************************/
+    function bb_cpt_html() { ?>
+        <input type="checkbox" name="bb_cpt" value="1" <?php checked(get_option('bb_cpt'), '1'); ?>>
+    <?php }
+
+    /****************************** Callback function for bb_wordcount *********************************/
+    function bb_wordcount_html() { ?>
+        <input type="checkbox" name="bb_wordcount" value="1" <?php checked(get_option('bb_wordcount'), '1'); ?>>
+    <?php }
 
     /****************************** Callback functios for live chat page *********************************/
     /****************************** Callback function for chat_link *********************************/
@@ -411,5 +439,4 @@ class BBPlugin {
 
 }
 $bbPlugin = new BBPlugin();
-$bbPlugin->hello();
 ?>
