@@ -64,11 +64,17 @@ class BBPlugin {
     function main_page() {
         add_menu_page( 'BB Plugin', 'BB Plugin', 'manage_options', 'bb_plugin', array($this, 'main_page_html'), PLUGIN_URL . 'assets/img/icon.png', 110 );
         add_submenu_page( 'bb_plugin', 'Dashboard', 'Dashboard', 'manage_options', 'bb_plugin', null);
+        add_submenu_page( 'bb_plugin', 'BB Live Chat', 'Live Chat', 'manage_options', 'live_chat', array($this, 'live_chat_html') );
     }
 
     /****************************** Callback function for BB Plugin *********************************/
     function main_page_html() {
         require_once PLUGIN_PATH . 'template/admin.php';
+    }
+
+    /****************************** Callback function for live chat *********************************/
+    function live_chat_html() {
+        require_once 'template/live-chat.php';
     }
 
 }
