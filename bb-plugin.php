@@ -179,6 +179,53 @@ class BBPlugin {
         add_settings_field( 'wc_readtime', 'Read time', array($this, 'readtime_html'), 'word_count_settings', 'wc_first_section' );
         register_setting( 'wordCount', 'wc_readtime', array('sanitize_callback' => 'sanitize_text_field', 'default' => '1') );
 
+        /****************************** settings, sections and fields for custom post type page *********************************/
+        add_settings_section( 'bb_cpt_setting_section', null, null,'bb_cpt_setting' );
+
+        $caption = "
+            <p>Add supports for various available post editor features on the right. A checked value means the post type feature is supported.</p>
+            <p> Use the 'None' option to expilicitly set 'supports' to false.</p>
+        ";
+
+        register_setting( 'bb_cpt_setting', 'labels' );
+        add_settings_field( 'label', 'Label', array($this, 'label_html'), 'bb_cpt_setting', 'bb_cpt_setting_section' );
+
+        register_setting( 'bb_cpt_setting', 'description' );
+        add_settings_field( 'description', 'Description', array($this, 'description_html'), 'bb_cpt_setting', 'bb_cpt_setting_section' );
+
+        register_setting( 'bb_cpt_setting', 'hierarchical' );
+        add_settings_field( 'hierarchical', 'Hierarchical', array($this, 'hierarchical_html'), 'bb_cpt_setting', 'bb_cpt_setting_section' );
+
+        register_setting( 'bb_cpt_setting', 'public' );
+        add_settings_field( 'public', 'Public', array($this, 'public_html'), 'bb_cpt_setting', 'bb_cpt_setting_section' );
+
+        register_setting( 'bb_cpt_setting', 'publicly_queryable' );
+        add_settings_field( 'publicly_queryable', 'Publicly Queryable', array($this, 'publicly_queryable_html'), 'bb_cpt_setting', 'bb_cpt_setting_section' );
+
+        register_setting( 'bb_cpt_setting', 'show_ui' );
+        add_settings_field( 'show_ui', 'Show UI', array($this, 'show_ui_html'), 'bb_cpt_setting', 'bb_cpt_setting_section' );
+
+        register_setting( 'bb_cpt_setting', 'show_in_menu' );
+        add_settings_field( 'show_in_menu', 'Show in menu', array($this, 'show_in_menu_html'), 'bb_cpt_setting', 'bb_cpt_setting_section' );
+
+        register_setting( 'bb_cpt_setting', 'show_in_nav_menus' );
+        add_settings_field( 'show_in_nav_menus', 'Show in nav menu', array($this, 'show_in_nav_menus_html'), 'bb_cpt_setting', 'bb_cpt_setting_section' );
+
+        register_setting( 'bb_cpt_setting', 'menu_position' );
+        add_settings_field( 'menu_position', 'Menu Position', array($this, 'menu_position_html'), 'bb_cpt_setting', 'bb_cpt_setting_section' );
+
+        register_setting( 'bb_cpt_setting', 'can_export' );
+        add_settings_field( 'can_export', 'Can Export', array($this, 'can_export_html'), 'bb_cpt_setting', 'bb_cpt_setting_section' );
+
+        register_setting( 'bb_cpt_setting', 'has_archive' );
+        add_settings_field( 'has_archive', 'Has Archive', array($this, 'has_archive_html'), 'bb_cpt_setting', 'bb_cpt_setting_section' );
+
+        register_setting( 'bb_cpt_setting', 'capability_type' );
+        add_settings_field( 'capability_type', 'Capability Type', array($this, 'capability_type_html'), 'bb_cpt_setting', 'bb_cpt_setting_section' );
+
+        register_setting( 'bb_cpt_setting', 'supports' );
+        add_settings_field( 'supports', 'Supports <br>'. $caption, array($this, 'supports_html'), 'bb_cpt_setting', 'bb_cpt_setting_section' );
+
     }
 
     /****************************** Callback functios for live chat page *********************************/
@@ -232,6 +279,137 @@ class BBPlugin {
         <input type="checkbox" name="wc_readtime" value="1" <?php checked(get_option('wc_readtime'), '1'); ?>>
     <?php }
 
+    /****************************** Callback functions for custom post type page *********************************/
+    /****************************** Callback function for label *********************************/
+    function label_html() {
+        $labels = get_option('labels'); 
+    ?>
+        <input type="text" name="labels" value="<?php echo $labels; ?>"></br>
+        <p>Type the label of your post type...</p>
+    <?php }
+
+    /****************************** Callback function for description *********************************/
+    function description_html() {
+        $description = get_option('description'); 
+    ?>
+        <input type="text" name="description" value="<?php echo $description; ?>"></br>
+        <p>Type the description of your post type...</p>
+    <?php }
+
+    /****************************** Callback function for hierarchical *********************************/
+    function hierarchical_html() {
+        $hierarchical = get_option('hierarchical'); 
+    ?>
+        <select name="hierarchical">
+            <option value="0" <?php selected( get_option('hierarchical'), '0' ) ?>>True</option>
+            <option value="1" <?php selected( get_option('hierarchical'), '1' ) ?>>False</option>
+        </select>
+        <p>(default: false) Not query can be performed on the front end as part of parse_request()</p>
+    <?php }
+
+    /****************************** Callback function for public *********************************/
+    function public_html() {
+        $public = get_option('public');
+    ?>
+        <select name="public">
+            <option value="0" <?php selected( get_option('public'), '0' ) ?>>True</option>
+            <option value="1" <?php selected( get_option('public'), '1' ) ?>>False</option>
+        </select>
+        <p>(Custom Post Type UI default: true) Whether or not posts of this type should be shown in the admin UI and is publicly queryable.</p>
+    <?php }
+
+    /****************************** Callback function for publicly_queryable *********************************/
+    function publicly_queryable_html() {
+        $publicly_queryable = get_option('publicly_queryable');
+    ?>
+        <select name="publicly_queryable">
+            <option value="0" <?php selected( get_option('publicly_queryable'), '0' ) ?>>True</option>
+            <option value="1" <?php selected( get_option('publicly_queryable'), '1' ) ?>>False</option>
+        </select>
+        <p>(default: true) Not query can be performed on the front end as part of parse_request()</p>
+    <?php }
+
+    /****************************** Callback function for show_ui *********************************/
+    function show_ui_html() {
+        $show_ui = get_option('show_ui');
+    ?>
+        <select name="show_ui">
+            <option value="0" <?php selected( get_option('show_ui'), '0' ) ?>>True</option>
+            <option value="1" <?php selected( get_option('show_ui'), '1' ) ?>>False</option>
+        </select>
+        <p>(default: true) Whether or not to generate a default UI for managing this post type.</p>
+    <?php }
+
+    /****************************** Callback function for show_in_menu *********************************/
+    function show_in_menu_html() {
+        $show_in_menu = get_option('show_in_menu');
+    ?>
+        <select name="show_in_menu">
+            <option value="0" <?php selected( get_option('show_in_menu'), '0' ) ?>>True</option>
+            <option value="1" <?php selected( get_option('show_in_menu'), '1' ) ?>>False</option>
+        </select>
+        <p>(Custom Post Type UI default: true) Whether or not this post type is available for selection in menus.</p>
+    <?php }
+
+    /****************************** Callback function for show_in_nav_menus *********************************/
+    function show_in_nav_menus_html() {
+        $show_in_nav_menus = get_option('show_in_nav_menus');
+    ?>
+        <select name="show_in_nav_menus">
+            <option value="0" <?php selected( get_option('show_in_nav_menus'), '0' ) ?>>True</option>
+            <option value="1" <?php selected( get_option('show_in_nav_menus'), '1' ) ?>>False</option>
+        </select>
+        <p>(Custom Post Type UI default: true) Whether or not this post type is available for selection in navigation menus.</p>
+    <?php }
+
+    /****************************** Callback function for menu_position *********************************/
+    function menu_position_html() {
+        $menu_position = get_option('menu_position');
+    ?>
+        <input type="number" name="menu_position" value="<?php echo $menu_position; ?>"></br>
+        <p>Type the number where you want to show your post type.</p>
+    <?php }
+    
+    /****************************** Callback function for can_export *********************************/
+    function can_export_html() {
+        $can_export = get_option('can_export');
+    ?>
+        <select name="can_export">
+            <option value="0" <?php selected( get_option('can_export'), '0' ) ?>>True</option>
+            <option value="1" <?php selected( get_option('can_export'), '1' ) ?>>False</option>
+        </select>
+        <p>(Custom Post Type UI default: true) Whether or not this post type you want to export or not.</p>
+    <?php }
+    
+    /****************************** Callback function for has_archive *********************************/
+    function has_archive_html() {
+        $has_archive = get_option('has_archive');
+    ?>
+        <select name="has_archive">
+            <option value="0" <?php selected( get_option('has_archive'), '0' ) ?>>True</option>
+            <option value="1" <?php selected( get_option('has_archive'), '1' ) ?>>False</option>
+        </select>
+        <p>(Custom Post Type UI default: true) Whether or not this post type has archives or not.</p>
+    <?php }
+    
+    /****************************** Callback function for capability_type *********************************/
+    function capability_type_html() {
+        $capability_type = get_option('capability_type');
+    ?>
+        <select name="capability_type">
+            <option value="0" <?php selected( get_option('capability_type'), '0' ) ?>>Post</option>
+            <option value="1" <?php selected( get_option('capability_type'), '1' ) ?>>Page</option>
+        </select>
+        <p>(Custom Post Type UI default: post) Whether which post type you want to create.</p>
+    <?php }
+    
+    /****************************** Callback function for supports *********************************/
+    function supports_html() {
+        $supports = get_option('supports');
+    ?>
+    <?php }
+
 }
 $bbPlugin = new BBPlugin();
+$bbPlugin->hello();
 ?>
