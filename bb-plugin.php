@@ -64,9 +64,15 @@ class BBPlugin {
 
     /****************************** Adding new pages *********************************/
     function main_page() {
+        add_options_page( 'Word Count Settings', 'Word Count', 'manage_options', 'word_count_settings', array($this, 'menu_page_html') );
         add_menu_page( 'BB Plugin', 'BB Plugin', 'manage_options', 'bb_plugin', array($this, 'main_page_html'), PLUGIN_URL . 'assets/img/icon.png', 110 );
         add_submenu_page( 'bb_plugin', 'Dashboard', 'Dashboard', 'manage_options', 'bb_plugin', null);
         add_submenu_page( 'bb_plugin', 'BB Live Chat', 'Live Chat', 'manage_options', 'live_chat', array($this, 'live_chat_html') );
+    }
+
+    /******************************* Callback function for menu page ************************************/
+    function menu_page_html() {
+        require_once 'template/word-count.php';
     }
 
     /****************************** Callback function for BB Plugin *********************************/
