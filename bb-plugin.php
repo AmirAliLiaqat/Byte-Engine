@@ -40,6 +40,8 @@ class BBPlugin {
         add_filter( "plugin_action_links_" . PLUGIN, array( $this, 'settings_links' ) );
 
         add_action( 'admin_menu', array($this, 'main_page') );
+
+        add_filter( "the_content", array( $this, 'chat_html' ) );
     }
 
     /****************************** Enqueue all styles and scripts *********************************/
@@ -75,6 +77,20 @@ class BBPlugin {
     /****************************** Callback function for live chat *********************************/
     function live_chat_html() {
         require_once 'template/live-chat.php';
+    }
+
+    /****************************** Function for live chat page html *********************************/
+    function chat_html( $content ) {
+        $chat_button_number = get_option( 'bb_chat_label' );
+        $bb_live_chat_div = '<div class="bb_live_chat_div">';
+        $bb_live_chat_link = '<a href="https://web.whatsapp.com/send?phone='.$chat_button_number.'" class="chat_wrap"></a>';
+        $bb_live_chat_div_end = '</div>';
+
+        $content .= $bb_live_chat_div;
+        $content .= $bb_live_chat_link;
+        $content .= $bb_live_chat_div_end;
+
+        return $content;
     }
 
 }
