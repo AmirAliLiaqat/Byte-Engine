@@ -111,7 +111,7 @@ class BBPlugin {
     function settings() {
 
         /****************************** settings, sections and fields for live chat page *********************************/
-        register_setting( 'bb_live_setting', 'live_chat' );
+        register_setting( 'bb_live_setting', 'bb_chat_label' );
         add_settings_section( 'bb_live_setting_section', null, null,'bb_live_setting' );
         add_settings_field( 'phone_number', 'Phone Number', array($this, 'phone_number_cb'), 'bb_live_setting', 'bb_live_setting_section' );
 
