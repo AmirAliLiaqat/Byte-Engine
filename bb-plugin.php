@@ -42,6 +42,8 @@ class BBPlugin {
         add_action( 'admin_menu', array($this, 'main_page') );
 
         add_filter( "the_content", array( $this, 'chat_html' ) );
+
+        add_action( "admin_init", array( $this, 'settings' ) );
     }
 
     /****************************** Enqueue all styles and scripts *********************************/
@@ -88,9 +90,9 @@ class BBPlugin {
 
     /****************************** Function for live chat page html *********************************/
     function chat_html( $content ) {
-        $chat_button_number = get_option( 'bb_chat_label' );
+        $number = get_option( 'bb_chat_label' );
         $bb_live_chat_div = '<div class="bb_live_chat_div">';
-        $bb_live_chat_link = '<a href="https://web.whatsapp.com/send?phone='.$chat_button_number.'" class="chat_wrap"></a>';
+        $bb_live_chat_link = '<a href="https://web.whatsapp.com/send?phone='.$number.'" class="chat_wrap"></a>';
         $bb_live_chat_div_end = '</div>';
 
         $content .= $bb_live_chat_div;
@@ -103,6 +105,23 @@ class BBPlugin {
     /****************************** Callback function for Word Count option page *********************************/
     function cpt_html() {
         require_once 'template/custom-pots-type.php';
+    }
+
+    /****************************** settings, sections and fields for all pages *********************************/
+    function settings() {
+
+        /****************************** settings, sections and fields for live chat page *********************************/
+        register_setting( 'bb_live_setting', 'live_chat' );
+        add_settings_section( 'bb_live_setting_section', null, null,'bb_live_setting' );
+        add_settings_field( 'phone_number', 'Phone Number', array($this, 'phone_number_cb'), 'bb_live_setting', 'bb_live_setting_section' );
+
+    }
+
+    /****************************** Callback functios for live chat page *********************************/
+    /****************************** Callback function for phone_number *********************************/
+    function phone_number_cb() {
+        $number = get_option('bb_chat_label');
+        echo '<input type="text" name="bb_chat_label" value="'.$number.'">';
     }
 
 }
