@@ -63,6 +63,7 @@ class BBPlugin {
     /****************************** Adding new pages *********************************/
     function main_page() {
         add_menu_page( 'BB Plugin', 'BB Plugin', 'manage_options', 'bb_plugin', array($this, 'main_page_html'), PLUGIN_URL . 'assets/img/icon.png', 110 );
+        add_submenu_page( 'bb_plugin', 'Dashboard', 'Dashboard', 'manage_options', 'bb_plugin', null);
     }
 
     /****************************** Callback function for BB Plugin *********************************/
