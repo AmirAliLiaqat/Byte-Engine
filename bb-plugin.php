@@ -29,3 +29,10 @@ if(!defined('PLUGIN_URL')) {
 if(!defined('PLUGIN')) {
     define('PLUGIN', plugin_basename( __FILE__ ));
 }
+
+/****************************** Creating main class for whole plugin *********************************/
+class BBPlugin {
+    
+}
+$bbPlugin = new BBPlugin();
+?>
