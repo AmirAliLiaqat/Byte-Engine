@@ -32,7 +32,23 @@ if(!defined('PLUGIN')) {
 
 /****************************** Creating main class for whole plugin *********************************/
 class BBPlugin {
+
+    /****************************** Function for adding all actions and filters *********************************/
+    function __construct() {
+        add_action( 'wp_enqueue_scripts', array($this, 'enqueue') );
+    }
     
+    /****************************** Enqueue all styles and scripts *********************************/
+    function enqueue() {
+        wp_enqueue_style( 'bb-plugin-style', PLUGIN_URL . 'assets/css/style.css' );
+        wp_enqueue_style( 'bb-plugin-bootstrap', 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css' );
+
+        wp_enqueue_script( 'bb-plugin-script', PLUGIN_URL . 'assets/js/script.js', 'jquery' );
+        wp_enqueue_script( 'popper', 'https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js' );
+        wp_enqueue_script( 'bootstrap-min', 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js' );
+        wp_enqueue_script( 'bootstrap-bundle', 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js' );
+    }
+
 }
 $bbPlugin = new BBPlugin();
 ?>
