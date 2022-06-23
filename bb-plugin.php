@@ -50,12 +50,22 @@ class BBPlugin {
         wp_enqueue_script( 'bootstrap-min', 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js' );
         wp_enqueue_script( 'bootstrap-bundle', 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js' );
     }
-    
+
     /****************************** Callback function for adding settings links *********************************/
     function settings_links($links) {
         $settings =  '<a href="admin.php?page=bb_plugin">Settings</a>';
         array_push( $links, $settings );
         return $links;
+    }
+
+    /****************************** Adding new pages *********************************/
+    function main_page() {
+        add_menu_page( 'BB Plugin', 'BB Plugin', 'manage_options', 'bb_plugin', array($this, 'main_page_html'), PLUGIN_URL . 'assets/img/icon.png', 110 );
+    }
+
+    /****************************** Callback function for BB Plugin *********************************/
+    function main_page_html() {
+        require_once PLUGIN_PATH . 'template/admin.php';
     }
 
 }
