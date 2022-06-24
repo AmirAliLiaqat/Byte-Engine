@@ -164,90 +164,16 @@ class BBPlugin {
     function settings() {
 
         /****************************** settings, sections and fields for main page *********************************/
-        add_settings_section( 'bb_main_setting_section', null, null,'bb_main_setting' );
-
-        add_settings_field( 'bb_live_chat', 'Live Chat', array($this, 'bb_live_chat_html'), 'bb_main_setting', 'bb_main_setting_section' );
-        register_setting( 'bb_main_setting', 'bb_chat' );
-
-        add_settings_field( 'bb_cpt', 'CPT Manager', array($this, 'bb_cpt_html'), 'bb_main_setting', 'bb_main_setting_section' );
-        register_setting( 'bb_main_setting', 'bb_cpt' );
-
-        add_settings_field( 'bb_wordcount', 'Word Count', array($this, 'bb_wordcount_html'), 'bb_main_setting', 'bb_main_setting_section' );
-        register_setting( 'bb_main_setting', 'bb_wordcount' );
+        require_once 'inc/main-page-settings.php';
 
         /****************************** settings, sections and fields for live chat page *********************************/
-        add_settings_section( 'bb_live_setting_section', null, null,'bb_live_setting' );
-
-        register_setting( 'bb_live_setting', 'bb_chat_link' );
-        add_settings_field( 'chat_link', 'Chat Link', array($this, 'chat_link_cb'), 'bb_live_setting', 'bb_live_setting_section' );
-
-        register_setting( 'bb_live_setting', 'bb_chat_label' );
-        add_settings_field( 'phone_number', 'Phone Number', array($this, 'phone_number_cb'), 'bb_live_setting', 'bb_live_setting_section' );
+        require_once 'inc/live-chat-page-settings.php';
 
         /****************************** settings, sections and fields for word count page *********************************/
-        add_settings_section( 'wc_first_section', null, null, 'word_count_settings' );
-
-        add_settings_field( 'wc_location', 'Display Location', array($this, 'location_html'), 'word_count_settings', 'wc_first_section' );
-        register_setting( 'wordCount', 'wc_location', array('sanitize_callback' => array($this, 'sanitize_location'), 'default' => '0') );
-
-        add_settings_field( 'wc_headline', 'Headline Text', array($this, 'headline_html'), 'word_count_settings', 'wc_first_section' );
-        register_setting( 'wordCount', 'wc_headline', array('sanitize_callback' => 'sanitize_text_field', 'default' => 'Post Statistics') );
-
-        add_settings_field( 'wc_wordcount', 'Word count', array($this, 'wordcount_html'), 'word_count_settings', 'wc_first_section' );
-        register_setting( 'wordCount', 'wc_wordcount', array('sanitize_callback' => 'sanitize_text_field', 'default' => '1') );
-
-        add_settings_field( 'wc_charactercount', 'Character count', array($this, 'charactercount_html'), 'word_count_settings', 'wc_first_section' );
-        register_setting( 'wordCount', 'wc_charactercount', array('sanitize_callback' => 'sanitize_text_field', 'default' => '1') );
-
-        add_settings_field( 'wc_readtime', 'Read time', array($this, 'readtime_html'), 'word_count_settings', 'wc_first_section' );
-        register_setting( 'wordCount', 'wc_readtime', array('sanitize_callback' => 'sanitize_text_field', 'default' => '1') );
-
+        require_once 'inc/word-count-page-settings.php';
+        
         /****************************** settings, sections and fields for custom post type page *********************************/
-        add_settings_section( 'bb_cpt_setting_section', null, null,'bb_cpt_setting' );
-
-        $caption = "
-            <p>Add supports for various available post editor features on the right. A checked value means the post type feature is supported.</p>
-            <p> Use the 'None' option to expilicitly set 'supports' to false.</p>
-        ";
-
-        register_setting( 'bb_cpt_setting', 'labels' );
-        add_settings_field( 'label', 'Label', array($this, 'label_html'), 'bb_cpt_setting', 'bb_cpt_setting_section' );
-
-        register_setting( 'bb_cpt_setting', 'description' );
-        add_settings_field( 'description', 'Description', array($this, 'description_html'), 'bb_cpt_setting', 'bb_cpt_setting_section' );
-
-        register_setting( 'bb_cpt_setting', 'hierarchical' );
-        add_settings_field( 'hierarchical', 'Hierarchical', array($this, 'hierarchical_html'), 'bb_cpt_setting', 'bb_cpt_setting_section' );
-
-        register_setting( 'bb_cpt_setting', 'public' );
-        add_settings_field( 'public', 'Public', array($this, 'public_html'), 'bb_cpt_setting', 'bb_cpt_setting_section' );
-
-        register_setting( 'bb_cpt_setting', 'publicly_queryable' );
-        add_settings_field( 'publicly_queryable', 'Publicly Queryable', array($this, 'publicly_queryable_html'), 'bb_cpt_setting', 'bb_cpt_setting_section' );
-
-        register_setting( 'bb_cpt_setting', 'show_ui' );
-        add_settings_field( 'show_ui', 'Show UI', array($this, 'show_ui_html'), 'bb_cpt_setting', 'bb_cpt_setting_section' );
-
-        register_setting( 'bb_cpt_setting', 'show_in_menu' );
-        add_settings_field( 'show_in_menu', 'Show in menu', array($this, 'show_in_menu_html'), 'bb_cpt_setting', 'bb_cpt_setting_section' );
-
-        register_setting( 'bb_cpt_setting', 'show_in_nav_menus' );
-        add_settings_field( 'show_in_nav_menus', 'Show in nav menu', array($this, 'show_in_nav_menus_html'), 'bb_cpt_setting', 'bb_cpt_setting_section' );
-
-        register_setting( 'bb_cpt_setting', 'menu_position' );
-        add_settings_field( 'menu_position', 'Menu Position', array($this, 'menu_position_html'), 'bb_cpt_setting', 'bb_cpt_setting_section' );
-
-        register_setting( 'bb_cpt_setting', 'can_export' );
-        add_settings_field( 'can_export', 'Can Export', array($this, 'can_export_html'), 'bb_cpt_setting', 'bb_cpt_setting_section' );
-
-        register_setting( 'bb_cpt_setting', 'has_archive' );
-        add_settings_field( 'has_archive', 'Has Archive', array($this, 'has_archive_html'), 'bb_cpt_setting', 'bb_cpt_setting_section' );
-
-        register_setting( 'bb_cpt_setting', 'capability_type' );
-        add_settings_field( 'capability_type', 'Capability Type', array($this, 'capability_type_html'), 'bb_cpt_setting', 'bb_cpt_setting_section' );
-
-        register_setting( 'bb_cpt_setting', 'supports' );
-        add_settings_field( 'supports', 'Supports <br>'. $caption, array($this, 'supports_html'), 'bb_cpt_setting', 'bb_cpt_setting_section' );
+        require_once 'inc/cpt-page-settings.php';
 
     }
 
