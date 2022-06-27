@@ -14,6 +14,9 @@ add_settings_field( 'label', 'Label', array($this, 'label_html'), 'bb_cpt_settin
 register_setting( 'bb_cpt_setting', 'description' );
 add_settings_field( 'description', 'Description', array($this, 'description_html'), 'bb_cpt_setting', 'bb_cpt_setting_section' );
 
+register_setting( 'bb_cpt_setting', 'menu_icon' );
+add_settings_field( 'menu_icon', 'Menu Icon', array($this, 'menu_icon_html'), 'bb_cpt_setting', 'bb_cpt_setting_section' );
+
 register_setting( 'bb_cpt_setting', 'hierarchical' );
 add_settings_field( 'hierarchical', 'Hierarchical', array($this, 'hierarchical_html'), 'bb_cpt_setting', 'bb_cpt_setting_section' );
 
