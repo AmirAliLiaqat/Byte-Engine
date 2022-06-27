@@ -44,6 +44,8 @@ class BBPlugin {
         add_filter( "the_content", array( $this, 'chat_html' ) );
 
         add_action( "admin_init", array( $this, 'settings' ) );
+
+        add_action( "init", array( $this, 'cpt' ) );
     }
 
     /****************************** Enqueue all styles and scripts *********************************/
@@ -381,6 +383,11 @@ class BBPlugin {
         $supports = get_option('supports');
     ?>
     <?php }
+
+    /****************************** Function for adding custom post type *********************************/
+    function cpt() {
+        require_once 'inc/add-cpt.php';
+    }
 
 }
 $bbPlugin = new BBPlugin();
