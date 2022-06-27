@@ -261,6 +261,14 @@ class BBPlugin {
         <p>Type the description of your post type...</p>
     <?php }
 
+    /****************************** Callback function for menu_icon *********************************/
+    function menu_icon_html() {
+        $menu_icon = get_option('menu_icon'); 
+    ?>
+        <input type="text" name="menu_icon" value="<?php echo $menu_icon; ?>"></br>
+        <p>Type the text of your post type menu icon...</p>
+    <?php }
+
     /****************************** Callback function for hierarchical *********************************/
     function hierarchical_html() {
         $hierarchical = get_option('hierarchical'); 
