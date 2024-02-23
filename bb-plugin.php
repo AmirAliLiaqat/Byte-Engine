@@ -1,13 +1,13 @@
 <?php
 /**
- * Plugin Name: BB Plugin
- * Plugin URI: https://amir.bytebunch.com/plugins
+ * Plugin Name: Byte Engine
+ * Plugin URI: https://byte.likesyou.org/plugins
  * Author: Byte Ki Duniya
- * Author URI: https://amir.bytebunch.com
+ * Author URI: https://byte.likesyou.org
  * Description: That plugin which is used for multi purposes like(Custom Forms, Custom Post Types, Live Chat, Word and Character Count etc).
  * Version: 1.0.0
  * License: GPL v2 or Later
- * Text Domain: bb_plugin
+ * Text Domain: byte_engine
  */
 
 /****************************** Create constant to avoid to direct access *********************************/
@@ -31,7 +31,7 @@ if(!defined('PLUGIN')) {
 }
 
 /****************************** Creating main class for whole plugin *********************************/
-class BBPlugin {
+class ByteEngine {
 
     /****************************** Function for adding all actions and filters *********************************/
     function __construct() {
@@ -50,18 +50,18 @@ class BBPlugin {
 
     /****************************** Enqueue all styles and scripts *********************************/
     function enqueue() {
-        wp_enqueue_style( 'bb-plugin-style', PLUGIN_URL . 'assets/css/style.css' );
-        wp_enqueue_style( 'bb-plugin-bootstrap', 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css' );
+        wp_enqueue_style( 'byte-engine-style', PLUGIN_URL . 'assets/css/style.css' );
+        wp_enqueue_style( 'byte-engine-bootstrap', 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css' );
 
-        wp_enqueue_script( 'bb-plugin-script', PLUGIN_URL . 'assets/js/script.js', 'jquery' );
-        wp_enqueue_script( 'popper', 'https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js' );
-        wp_enqueue_script( 'bootstrap-min', 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js' );
-        wp_enqueue_script( 'bootstrap-bundle', 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js' );
+        wp_enqueue_script( 'byte-engine-script', PLUGIN_URL . 'assets/js/script.js', 'jquery' );
+        wp_enqueue_script( 'byte-engine-popper', 'https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js' );
+        wp_enqueue_script( 'byte-engine-bootstrap-min', 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js' );
+        wp_enqueue_script( 'byte-engine-bootstrap-bundle', 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js' );
     }
 
     /****************************** Callback function for adding settings links *********************************/
     function settings_links($links) {
-        $settings =  '<a href="admin.php?page=bb_plugin">Settings</a>';
+        $settings =  '<a href="admin.php?page=byte_engine">Settings</a>';
         array_push( $links, $settings );
         return $links;
     }
@@ -69,19 +69,19 @@ class BBPlugin {
     /****************************** Adding new pages *********************************/
     function main_page() {
 
-        if(get_option('bb_wordcount') == '1') {
+        if(get_option('byte_wordcount') == '1') {
             add_options_page( 'Word Count Settings', 'Word Count', 'manage_options', 'word_count_settings', array($this, 'menu_page_html') );
         }
 
-        add_menu_page( 'BB Plugin', 'BB Plugin', 'manage_options', 'bb_plugin', array($this, 'main_page_html'), PLUGIN_URL . 'assets/img/icon.png', 110 );
-        add_submenu_page( 'bb_plugin', 'Dashboard', 'Dashboard', 'manage_options', 'bb_plugin', null);
+        add_menu_page( 'Byte Engine', 'Byte Engine', 'manage_options', 'byte_engine', array($this, 'main_page_html'), PLUGIN_URL . 'assets/img/icon.png', 110 );
+        add_submenu_page( 'byte_engine', 'Dashboard', 'Dashboard', 'manage_options', 'byte_engine', null);
 
-        if(get_option('bb_chat') == '1') {
-            add_submenu_page( 'bb_plugin', 'BB Live Chat', 'Live Chat', 'manage_options', 'live_chat', array($this, 'live_chat_html') );
+        if(get_option('byte_chat') == '1') {
+            add_submenu_page( 'byte_engine', 'Byte Live Chat', 'Live Chat', 'manage_options', 'live_chat', array($this, 'live_chat_html') );
         }
 
-        if(get_option('bb_cpt') == '1') {
-            add_submenu_page( 'bb_plugin', 'BB CPT', 'CPT Manager', 'manage_options', 'cpt_manager', array($this, 'cpt_html') );
+        if(get_option('byte_cpt') == '1') {
+            add_submenu_page( 'byte_engine', 'Byte CPT', 'CPT Manager', 'manage_options', 'cpt_manager', array($this, 'cpt_html') );
         }
         
     }
@@ -91,7 +91,7 @@ class BBPlugin {
         require_once 'template/word-count.php';
     }
 
-    /****************************** Callback function for BB Plugin *********************************/
+    /****************************** Callback function for Byte Engine *********************************/
     function main_page_html() {
         require_once PLUGIN_PATH . 'template/admin.php';
     }
@@ -103,21 +103,21 @@ class BBPlugin {
 
     /****************************** Function for live chat page html *********************************/
     function chat_html( $content ) {
-        $link = get_option( 'bb_chat_link' );
-        $number = get_option( 'bb_chat_label' );
-        $bb_live_chat_div = '<div class="bb_live_chat_div">';
-        $bb_live_chat_link = '<a href="'.$link.$number.'" class="chat_wrap"></a>';
-        $bb_live_chat_div_end = '</div>';
+        $link = get_option( 'byte_chat_link' );
+        $number = get_option( 'byte_chat_label' );
+        $byte_live_chat_div = '<div class="byte_live_chat_div">';
+        $byte_live_chat_link = '<a href="'.$link.$number.'" class="chat_wrap"></a>';
+        $byte_live_chat_div_end = '</div>';
 
-        $content .= $bb_live_chat_div;
-        $content .= $bb_live_chat_link;
-        $content .= $bb_live_chat_div_end;
+        $content .= $byte_live_chat_div;
+        $content .= $byte_live_chat_link;
+        $content .= $byte_live_chat_div_end;
         
-        if( is_main_query() AND is_single() AND 
+        if( is_main_query() && is_single() && 
         (
-            get_option('wc_wordcount', '1') OR 
-            get_option('wc_charactercount', '1') OR 
-            get_option('wc_readtime', '1')
+            get_option('byte_wordcount', '1') || 
+            get_option('byte_charactercount', '1') || 
+            get_option('byte_readtime', '1')
         ) ) {
             return $this->create_html($content);
         }
@@ -129,29 +129,29 @@ class BBPlugin {
     function create_html($content) {
         $html = '
             <div style="background:#ccc; margin:10px; padding:20px; font-style:italic;">
-                <h3 style="border-bottom:1px solid #000; padding-bottom:10px;">' .get_option('wc_headline', 'Post Statistics'). '</h3>
+                <h3 style="border-bottom:1px solid #000; padding-bottom:10px;">' .get_option('byte_headline', 'Post Statistics'). '</h3>
                     <p>';
 
                     // get word count once because both wordcount and read time will need it.
-                    if(get_option('wc_wordcount', '1') OR get_option('wc_readtime', '1')) {
+                    if(get_option('byte_wordcount', '1') OR get_option('byte_readtime', '1')) {
                         $wordcount = str_word_count(strip_tags($content));
                     }
 
-                    if(get_option('wc_wordcount', '1')) {
+                    if(get_option('byte_wordcount', '1')) {
                         $html .= 'This post has ' . $wordcount . ' words.</br>';
                     }
 
-                    if(get_option('wc_charactercount', '1')) {
+                    if(get_option('byte_charactercount', '1')) {
                         $html .= 'This post has ' . strlen(strip_tags($content)) . ' characters.</br>';
                     }
 
-                    if(get_option('wc_readtime', '1')) {
+                    if(get_option('byte_readtime', '1')) {
                         $html .= 'This post will take about ' . round($wordcount/255) . ' minute(s) to read.</br>';
                     }
 
         $html .= '</p></div>';
 
-        if(get_option('wc_location', '0') == '0') {
+        if(get_option('byte_location', '0') == '0') {
             return $html . $content;
         }
         return $content . $html;
@@ -180,70 +180,70 @@ class BBPlugin {
     }
 
     /****************************** Callback functios for main page *********************************/
-    /****************************** Callback function for bb_live_chat *********************************/
-    function bb_live_chat_html() { ?>
-        <input type="checkbox" name="bb_chat" value="1" <?php checked(get_option('bb_chat'), '1'); ?>>
+    /****************************** Callback function for byte_live_chat *********************************/
+    function byte_live_chat_html() { ?>
+        <input type="checkbox" name="byte_chat" value="1" <?php checked(get_option('byte_chat'), '1'); ?>>
     <?php }
 
-    /****************************** Callback function for bb_cpt *********************************/
-    function bb_cpt_html() { ?>
-        <input type="checkbox" name="bb_cpt" value="1" <?php checked(get_option('bb_cpt'), '1'); ?>>
+    /****************************** Callback function for byte_cpt *********************************/
+    function byte_cpt_html() { ?>
+        <input type="checkbox" name="byte_cpt" value="1" <?php checked(get_option('byte_cpt'), '1'); ?>>
     <?php }
 
-    /****************************** Callback function for bb_wordcount *********************************/
-    function bb_wordcount_html() { ?>
-        <input type="checkbox" name="bb_wordcount" value="1" <?php checked(get_option('bb_wordcount'), '1'); ?>>
+    /****************************** Callback function for byte_wordcount *********************************/
+    function byte_wordcount_html() { ?>
+        <input type="checkbox" name="byte_wordcount" value="1" <?php checked(get_option('byte_wordcount'), '1'); ?>>
     <?php }
 
     /****************************** Callback functios for live chat page *********************************/
     /****************************** Callback function for chat_link *********************************/
     function chat_link_cb() {
-        $link = get_option('bb_chat_link');
-        echo '<input type="text" name="bb_chat_link" value="'.$link.'">';
+        $link = get_option('byte_chat_link');
+        echo '<input type="text" name="byte_chat_link" value="'.$link.'">';
     }
 
     /****************************** Callback function for phone_number *********************************/
     function phone_number_cb() {
-        $number = get_option('bb_chat_label');
-        echo '<input type="text" name="bb_chat_label" value="'.$number.'">';
+        $number = get_option('byte_chat_label');
+        echo '<input type="text" name="byte_chat_label" value="'.$number.'">';
     }
 
     /******************************* Callback functions for word count page ************************************/
-    /******************************* Callback function for wc_location field ************************************/
+    /******************************* Callback function for byte_location field ************************************/
     function location_html() { ?>
-        <select name="wc_location">
-            <option value="0" <?php selected( get_option('wc_location'), '0' ) ?>>Beginning of post</option>
-            <option value="1" <?php selected( get_option('wc_location'), '1' ) ?>>End of post</option>
+        <select name="byte_location">
+            <option value="0" <?php selected( get_option('byte_location'), '0' ) ?>>Beginning of post</option>
+            <option value="1" <?php selected( get_option('byte_location'), '1' ) ?>>End of post</option>
         </select>
     <?php }
 
-    /******************************* Callback function for wc_location sanitize_callback ************************************/
+    /******************************* Callback function for byte_location sanitize_callback ************************************/
     function sanitize_location($input) {
-        if($input != '0' AND $input != '1') {
-            add_settings_error( 'wc_location', 'wc_location_error', 'Display location must be either beginning or end...' );
-            return get_option('wc_location');
+        if($input != '0' && $input != '1') {
+            add_settings_error( 'byte_location', 'byte_location_error', 'Display location must be either beginning or end...' );
+            return get_option('byte_location');
         }
         return $input;
     }
 
-    /******************************* Callback function for wc_headline field ************************************/
+    /******************************* Callback function for byte_headline field ************************************/
     function headline_html() { ?>
-        <input type="text" name="wc_headline" value="<?php echo esc_attr(get_option('wc_headline')); ?>">
+        <input type="text" name="byte_headline" value="<?php echo esc_attr(get_option('byte_headline')); ?>">
     <?php }
 
-    /******************************* Callback function for wc_wordcount field ************************************/
+    /******************************* Callback function for byte_wordcount field ************************************/
     function wordcount_html() { ?>
-        <input type="checkbox" name="wc_wordcount" value="1" <?php checked(get_option('wc_wordcount'), '1'); ?>>
+        <input type="checkbox" name="byte_wordcount" value="1" <?php checked(get_option('byte_wordcount'), '1'); ?>>
     <?php }
 
-    /******************************* Callback function for wc_charactercount field ************************************/
+    /******************************* Callback function for byte_charactercount field ************************************/
     function charactercount_html() { ?>
-        <input type="checkbox" name="wc_charactercount" value="1" <?php checked(get_option('wc_charactercount'), '1'); ?>>
+        <input type="checkbox" name="byte_charactercount" value="1" <?php checked(get_option('byte_charactercount'), '1'); ?>>
     <?php }
 
-    /******************************* Callback function for wc_readtime field ************************************/
+    /******************************* Callback function for byte_readtime field ************************************/
     function readtime_html() { ?>
-        <input type="checkbox" name="wc_readtime" value="1" <?php checked(get_option('wc_readtime'), '1'); ?>>
+        <input type="checkbox" name="byte_readtime" value="1" <?php checked(get_option('byte_readtime'), '1'); ?>>
     <?php }
 
     /****************************** Callback functions for custom post type page *********************************/
@@ -390,5 +390,5 @@ class BBPlugin {
     }
 
 }
-$bbPlugin = new BBPlugin();
+$byteEngine = new ByteEngine();
 ?>

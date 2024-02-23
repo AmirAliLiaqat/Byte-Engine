@@ -1,6 +1,6 @@
 <?php
 
-    $domain = 'bb_plugin';
+    $domain = 'byte_engine';
     $labels = get_option('labels');
     $description = get_option('description');
     $menu_icon = get_option('menu_icon');
