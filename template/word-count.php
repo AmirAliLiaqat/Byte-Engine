@@ -6,8 +6,8 @@
     
     <form action="options.php" method="post">
         <?php
-            settings_fields( 'wordCount' );
-            do_settings_sections( 'word_count_settings' );
+            settings_fields( 'byte_wc_setting' );
+            do_settings_sections( 'byte_wc_setting' );
             submit_button();
         ?>
     </form>

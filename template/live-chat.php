@@ -6,8 +6,8 @@
     
     <form action="options.php" method="post">
         <?php
-            settings_fields( 'bb_live_setting' );
-            do_settings_sections( 'bb_live_setting' );
+            settings_fields( 'byte_live_setting' );
+            do_settings_sections( 'byte_live_setting' );
             submit_button();
         ?>
     </form>

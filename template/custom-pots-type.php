@@ -6,8 +6,8 @@
     
     <form action="options.php" method="post">
         <?php
-            settings_fields( 'bb_cpt_setting' );
-            do_settings_sections( 'bb_cpt_setting' );
+            settings_fields( 'byte_cpt_setting' );
+            do_settings_sections( 'byte_cpt_setting' );
             submit_button('Add Post Type');
         ?>
     </form>
