@@ -34,26 +34,22 @@ if(!defined('PLUGIN')) {
 class ByteEngine {
     /****************************** Function for adding all actions and filters *********************************/
     function __construct() {
-        add_action( 'wp_enqueue_scripts', array($this, 'enqueue') );
-
+        add_action( 'wp_enqueue_scripts', array($this, 'enqueue_styles_scripts') );
+        add_action( 'admin_enqueue_scripts', array($this, 'enqueue_styles_scripts') );
         add_action( 'admin_menu', array($this, 'main_dashboard') );
-
         add_action( 'admin_init', array( $this, 'all_pages_settings' ) );
-
         add_action( 'init', array( $this, 'create_custom_post_types' ) );
 
         add_filter( 'the_content', array( $this, 'live_chat_frontend' ) );
     }
 
     /****************************** Enqueue all styles and scripts *********************************/
-    function enqueue() {
-        wp_enqueue_style( 'byte-engine-style', PLUGIN_URL . 'assets/css/style.css' );
-        wp_enqueue_style( 'byte-engine-bootstrap', 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css' );
-
-        wp_enqueue_script( 'byte-engine-script', PLUGIN_URL . 'assets/js/script.js', 'jquery' );
-        wp_enqueue_script( 'byte-engine-popper', 'https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js' );
-        wp_enqueue_script( 'byte-engine-bootstrap-min', 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js' );
-        wp_enqueue_script( 'byte-engine-bootstrap-bundle', 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js' );
+    function enqueue_styles_scripts() {
+        wp_enqueue_style('byte-engine-style', PLUGIN_URL . 'assets/css/style.css');
+        wp_enqueue_style('byte-engine-bootstrap-style', 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css');
+    
+        wp_enqueue_script('byte-engine-script', PLUGIN_URL . 'assets/js/script.js', array('jquery'), null, true);
+        wp_enqueue_script('byte-engine-bootstrap-script', 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js', array(), null, true);
     }
 
     /****************************** Adding new pages *********************************/
@@ -70,7 +66,7 @@ class ByteEngine {
         }
 
         if(get_option('byte_wordcount') == '1') {
-            add_options_page( 'byte_engine', 'Byte Word Count', 'Word Count', 'manage_options', 'word_count', array($this, 'word_count_html') );
+            add_submenu_page( 'byte_engine', 'Byte Word Count', 'Word Count', 'manage_options', 'word_count', array($this, 'word_count_html') );
         }
     }
 
@@ -86,7 +82,7 @@ class ByteEngine {
 
     /****************************** Callback function for custom post type *********************************/
     function cpt_html() {
-        require_once PLUGIN_PATH . 'template/custom-pots-type.php';
+        require_once PLUGIN_PATH . 'template/custom-post-type.php';
     }
 
     /******************************* Callback function for word count ************************************/
@@ -136,25 +132,25 @@ class ByteEngine {
     /******************************* Creating new function for Statistics html ************************************/
     function word_count_frontend($content) {
         $html = '
-            <div style="background: #F0F0F0; color: #000; margin: 10px 0; padding:20px; border-radius: 5px;">
-                <h3 style="border-bottom:1px solid #000; padding-bottom:10px;">' .get_option('byte_headline', 'Post Statistics'). '</h3>
-                    <p>';
-                        // get word count once because both wordcount and read time will need it.
-                        if(get_option('byte_post_wc', '1') OR get_option('byte_readtime', '1')) {
-                            $wordcount = str_word_count(strip_tags($content));
-                        }
+            <div style="background: #F0F0F0; color: #000; margin: 10px 0; padding: 10px 20px; border-radius: 5px;">
+                <h3 style="border-bottom: 1px solid #000; padding-bottom: 10px;">' .get_option('byte_headline', 'Post Statistics'). '</h3>
+                <p>';
+                    // get word count once because both wordcount and read time will need it.
+                    if(get_option('byte_post_wc', '1') OR get_option('byte_readtime', '1')) {
+                        $wordcount = str_word_count(strip_tags($content));
+                    }
 
-                        if(get_option('byte_post_wc', '1')) {
-                            $html .= 'This post has ' . $wordcount . ' words.</br>';
-                        }
+                    if(get_option('byte_post_wc', '1')) {
+                        $html .= 'This post has ' . $wordcount . ' words.</br>';
+                    }
 
-                        if(get_option('byte_charactercount', '1')) {
-                            $html .= 'This post has ' . strlen(strip_tags($content)) . ' characters.</br>';
-                        }
+                    if(get_option('byte_charactercount', '1')) {
+                        $html .= 'This post has ' . strlen(strip_tags($content)) . ' characters.</br>';
+                    }
 
-                        if(get_option('byte_readtime', '1')) {
-                            $html .= 'This post will take about ' . round($wordcount/255) . ' minute(s) to read.</br>';
-                        }
+                    if(get_option('byte_readtime', '1')) {
+                        $html .= 'This post will take about ' . round($wordcount/255) . ' minute(s) to read.</br>';
+                    }
         $html .= '</p></div>';
 
         if(get_option('byte_location', '0') == '0') {

@@ -2,7 +2,7 @@
   /****************************** settings, sections and fields for word count page *********************************/
   add_settings_section( 'byte_wc_setting_section', null, null, 'byte_wc_setting' );
 
-  register_setting( 'byte_wc_setting', 'byte_location', array('sanitize_callback' => array($this, 'sanitize_location'), 'default' => '0') );
+  register_setting( 'byte_wc_setting', 'byte_location', array('sanitize_callback' => 'sanitize_location', 'default' => '0') );
   add_settings_field( 'byte_location', 'Display Location', 'location_html', 'byte_wc_setting', 'byte_wc_setting_section' );
 
   register_setting( 'byte_wc_setting', 'byte_headline', array('sanitize_callback' => 'sanitize_text_field', 'default' => 'Post Statistics') );

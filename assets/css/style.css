@@ -1,40 +1,50 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
 :root {
-    --white : #fff;
-    --black: #000;
+  --white: #fff;
+  --black: #000;
 }
 
 /* typography css */
 .main_heading {
-    background: var(--black); 
-    color: var(--white);
-    margin: 20px;
-    padding: 20px;
-    text-align:center;
+  background: var(--black);
+  border-radius: 5px;
+  color: var(--white);
+  margin: 10px;
+  padding: 10px;
+  text-align: center;
 }
 
 .main_wrapper {
-    background: var(--white);
-    margin: 20px;
-    padding: 20px;
+  background: var(--white) !important;
+  margin: 20px 10px;
+  padding: 10px;
 }
 
 /* live chat css */
 .chat_wrap {
-    background-image: url(../img/whatsapp-logo-hover.png);
-    background-position: left top;
-    background-repeat: no-repeat;
-    border: none;
-    border-radius: 50%;
-    bottom: 20px;
-    right: 40px;
-    width: 60px;
-    height: 59px;
-    overflow: hidden;
-    position: fixed;
-    box-shadow: 0.3em 0.3em 0.5em rgba(0,0,0,0.3);
+  background-image: url(../img/whatsapp-logo-hover.png);
+  background-position: left top;
+  background-repeat: no-repeat;
+  border: none;
+  border-radius: 50%;
+  bottom: 20px;
+  right: 40px;
+  width: 60px;
+  height: 59px;
+  overflow: hidden;
+  position: fixed;
+  box-shadow: 0.3em 0.3em 0.5em rgba(0, 0, 0, 0.3);
 }
 
 .chat_wrap:hover {
-    cursor: pointer;
-    background-position: left bottom;
+  cursor: pointer;
+  background-position: left bottom;
 }
