@@ -34,11 +34,15 @@ if(!defined('PLUGIN')) {
 class ByteEngine {
     /****************************** Function for adding all actions and filters *********************************/
     public function __construct() {
+        // Actions hooks
         add_action( 'wp_enqueue_scripts', array($this, 'enqueue_styles_scripts') );
         add_action( 'admin_enqueue_scripts', array($this, 'enqueue_styles_scripts') );
         add_action( 'admin_menu', array($this, 'main_dashboard') );
         add_action( 'admin_init', array( $this, 'all_pages_settings' ) );
         add_action( 'init', array( $this, 'create_custom_post_types' ) );
+        add_action( 'elementor/widgets/widgets_registered', array( $this, 'register_custom_widget' ) );
+        
+        // Filters hooks
         add_filter( 'the_content', array( $this, 'live_chat_frontend' ) );
 
         // Activation hook
@@ -47,9 +51,17 @@ class ByteEngine {
         // Deactivation hook
         register_deactivation_hook(__FILE__, array($this, 'remove_custom_pages'));
 
+        // Shortcode hooks
         add_shortcode('register_form', 'byte_engine_register_form');
         add_shortcode('login_form', 'byte_engine_login_form');
         add_shortcode('profile_page', 'byte_engine_profile_form');
+    }
+
+    /****************************** Register new widgets for elementor *********************************/
+    public function register_custom_widget( $widgets_manager ) {
+        require_once( __DIR__ . '/widgets/hello-world-widget.php' );
+    
+        $widgets_manager->register_widget_type( new Elementor_Hello_World_Widget() );
     }
 
     /****************************** Add custom page on plugin activation *********************************/
@@ -100,21 +112,21 @@ class ByteEngine {
         }
     }
 
-    // Function For Adding Register Form
+    /****************************** Callback function for register form shortcode *********************************/
     public function byte_engine_register_form() {
         // ob_start();
         require_once PLUGIN_PATH . 'forms/register.php';
         // return ob_get_clean();
     }
 
-    // Function For Adding Login Form
+    /****************************** Callback function for login form shortcode *********************************/
     public function byte_engine_login_form() {
         // ob_start();
         require_once PLUGIN_PATH . 'forms/login.php';
         // return ob_get_clean();
     }
 
-    // Function For Adding Login Form
+    /****************************** Callback function for profile page shortcode *********************************/
     public function byte_engine_profile_form() {
         // ob_start();
         require_once PLUGIN_PATH . 'forms/profile.php';
@@ -181,9 +193,6 @@ class ByteEngine {
         
         /****************************** settings, sections and fields for custom post type page *********************************/
         require_once PLUGIN_PATH . 'inc/cpt-page-settings.php';
-        
-        /****************************** create shortcodes *********************************/
-        // require_once PLUGIN_PATH . 'inc/shortcodes.php';
     }
 
     /****************************** Function for adding custom post types *********************************/
