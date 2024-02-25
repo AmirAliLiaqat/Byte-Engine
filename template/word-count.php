@@ -1,4 +1,4 @@
-<h1 class="main_heading">Word Count Settings</h1>
+<h1 class="main_heading">Word Count Manager</h1>
 
 <div class="main_wrapper">
     <h2>Count words and characters</h2>

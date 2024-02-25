@@ -33,14 +33,92 @@ if(!defined('PLUGIN')) {
 /****************************** Creating main class for whole plugin *********************************/
 class ByteEngine {
     /****************************** Function for adding all actions and filters *********************************/
-    function __construct() {
+    public function __construct() {
         add_action( 'wp_enqueue_scripts', array($this, 'enqueue_styles_scripts') );
         add_action( 'admin_enqueue_scripts', array($this, 'enqueue_styles_scripts') );
         add_action( 'admin_menu', array($this, 'main_dashboard') );
         add_action( 'admin_init', array( $this, 'all_pages_settings' ) );
         add_action( 'init', array( $this, 'create_custom_post_types' ) );
-
         add_filter( 'the_content', array( $this, 'live_chat_frontend' ) );
+
+        // Activation hook
+        register_activation_hook(__FILE__, array($this, 'create_custom_pages'));
+
+        // Deactivation hook
+        register_deactivation_hook(__FILE__, array($this, 'remove_custom_pages'));
+
+        add_shortcode('register_form', 'byte_engine_register_form');
+        add_shortcode('login_form', 'byte_engine_login_form');
+        add_shortcode('profile_page', 'byte_engine_profile_form');
+    }
+
+    /****************************** Add custom page on plugin activation *********************************/
+    public function create_custom_pages() {
+        $pages = array(
+            'login' => array(
+                'title' => 'Login',
+                'shortcode' => '[login_form]',
+            ),
+            'register' => array(
+                'title' => 'Register',
+                'shortcode' => '[register_form]',
+            ),
+            'profile' => array(
+                'title' => 'Profile',
+                'shortcode' => '[profile_page]',
+            ),
+        );
+    
+        foreach ($pages as $slug => $page) {
+            $page_check = get_page_by_path($slug);
+            if (!$page_check) {
+                // Insert a shortcode block with the provided shortcode
+                $content = '<!-- wp:shortcode -->';
+                $content .= $page['shortcode'];
+                $content .= '<!-- /wp:shortcode -->';
+    
+                $page_id = wp_insert_post(array(
+                    'post_title' => $page['title'],
+                    'post_content' => $content,
+                    'post_status' => 'publish',
+                    'post_type' => 'page',
+                    'post_name' => $slug,
+                ));
+            }
+        }
+    }    
+
+    /****************************** Remove custom page on plugin deactivation *********************************/
+    public function remove_custom_pages() {
+        $pages = array('login', 'register', 'profile');
+
+        foreach ($pages as $slug) {
+            $page = get_page_by_path($slug);
+            if ($page) {
+                wp_delete_post($page->ID, true);
+            }
+        }
+    }
+
+    // Function For Adding Register Form
+    public function byte_engine_register_form() {
+        // ob_start();
+        require_once PLUGIN_PATH . 'forms/register.php';
+        // return ob_get_clean();
+    }
+
+    // Function For Adding Login Form
+    public function byte_engine_login_form() {
+        // ob_start();
+        require_once PLUGIN_PATH . 'forms/login.php';
+        // return ob_get_clean();
+    }
+
+    // Function For Adding Login Form
+    public function byte_engine_profile_form() {
+        // ob_start();
+        require_once PLUGIN_PATH . 'forms/profile.php';
+        // return ob_get_clean();
     }
 
     /****************************** Enqueue all styles and scripts *********************************/
@@ -103,6 +181,9 @@ class ByteEngine {
         
         /****************************** settings, sections and fields for custom post type page *********************************/
         require_once PLUGIN_PATH . 'inc/cpt-page-settings.php';
+        
+        /****************************** create shortcodes *********************************/
+        // require_once PLUGIN_PATH . 'inc/shortcodes.php';
     }
 
     /****************************** Function for adding custom post types *********************************/
