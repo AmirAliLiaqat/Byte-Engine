@@ -38,23 +38,25 @@ class ByteEngine {
         add_action( 'wp_enqueue_scripts', array($this, 'enqueue_styles_scripts') );
         add_action( 'admin_enqueue_scripts', array($this, 'enqueue_styles_scripts') );
         add_action( 'admin_menu', array($this, 'main_dashboard') );
-        add_action( 'admin_init', array( $this, 'all_pages_settings' ) );
-        add_action( 'init', array( $this, 'create_custom_post_types' ) );
-        add_action( 'elementor/widgets/widgets_registered', array( $this, 'register_custom_widget' ) );
+        add_action( 'admin_init', array($this, 'all_pages_settings') );
+        add_action( 'init', array($this, 'create_custom_post_types') );
+        add_action( 'elementor/widgets/widgets_registered', array($this, 'register_custom_widget') );
+        add_action( 'template_redirect', array($this, 'byte_engine_login_user' ));
+        add_action( 'template_redirect', array($this, 'byte_engine_redirects' ));
         
         // Filters hooks
-        add_filter( 'the_content', array( $this, 'live_chat_frontend' ) );
+        add_filter( 'the_content', array($this, 'live_chat_frontend') );
 
         // Activation hook
-        register_activation_hook(__FILE__, array($this, 'create_custom_pages'));
+        register_activation_hook(__FILE__, array($this, 'byte_engine_create_custom_pages'));
 
         // Deactivation hook
-        register_deactivation_hook(__FILE__, array($this, 'remove_custom_pages'));
+        register_deactivation_hook(__FILE__, array($this, 'byte_engine_remove_custom_pages'));
 
         // Shortcode hooks
-        add_shortcode('register_form', 'byte_engine_register_form');
-        add_shortcode('login_form', 'byte_engine_login_form');
-        add_shortcode('profile_page', 'byte_engine_profile_form');
+        add_shortcode('register_form', array($this, 'byte_engine_register_form'));
+        add_shortcode('login_form', array($this, 'byte_engine_login_form'));
+        add_shortcode('profile_page', array($this, 'byte_engine_profile_form'));
     }
 
     /****************************** Register new widgets for elementor *********************************/
@@ -65,7 +67,7 @@ class ByteEngine {
     }
 
     /****************************** Add custom page on plugin activation *********************************/
-    public function create_custom_pages() {
+    public function byte_engine_create_custom_pages() {
         $pages = array(
             'login' => array(
                 'title' => 'Login',
@@ -101,7 +103,7 @@ class ByteEngine {
     }    
 
     /****************************** Remove custom page on plugin deactivation *********************************/
-    public function remove_custom_pages() {
+    public function byte_engine_remove_custom_pages() {
         $pages = array('login', 'register', 'profile');
 
         foreach ($pages as $slug) {
@@ -133,8 +135,45 @@ class ByteEngine {
         // return ob_get_clean();
     }
 
+    /****************************** Callback function for login page *********************************/
+    public function byte_engine_login_user() {
+        if (isset($_POST['login'])) {
+          $user_name = sanitize_text_field($_POST['login_username']);
+          $password = sanitize_text_field($_POST['login_password']);
+      
+          $user = wp_signon(array(
+            'user_login' => $user_name,
+            'user_password' => $password,
+            'remember' => true,
+          ));
+      
+          if (is_wp_error($user)) {
+            echo $user->get_error_message();
+          } else {
+            if($user->roles[0] == 'administrator') {
+              wp_redirect(admin_url());
+              exit;
+            } else {
+              wp_redirect(site_url('/profile'));
+              exit;
+            }
+          }
+        }
+    }
+    
+    /****************************** Callback function for redirect pages *********************************/
+    public function byte_engine_redirects() {
+        if (is_user_logged_in() && (is_page('login') || is_page('register'))) {
+            wp_redirect(site_url('/profile'));
+            exit;
+        } elseif (!is_user_logged_in() && is_page('profile')) {
+            wp_redirect(site_url('/login'));
+            exit;
+        }
+    }
+
     /****************************** Enqueue all styles and scripts *********************************/
-    function enqueue_styles_scripts() {
+    public function enqueue_styles_scripts() {
         wp_enqueue_style('byte-engine-style', PLUGIN_URL . 'assets/css/style.css');
         wp_enqueue_style('byte-engine-bootstrap-style', 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css');
     
@@ -143,7 +182,7 @@ class ByteEngine {
     }
 
     /****************************** Adding new pages *********************************/
-    function main_dashboard() {
+    public function main_dashboard() {
         add_menu_page( 'Byte Engine', 'Byte Engine', 'manage_options', 'byte_engine', array($this, 'main_dashboard_html'), PLUGIN_URL . 'assets/img/icon.png', 110 );
         add_submenu_page( 'byte_engine', 'Dashboard', 'Dashboard', 'manage_options', 'byte_engine', null);
 
@@ -161,27 +200,27 @@ class ByteEngine {
     }
 
     /****************************** Callback function for Byte Engine *********************************/
-    function main_dashboard_html() {
+    public function main_dashboard_html() {
         require_once PLUGIN_PATH . 'template/dashboard.php';
     }
 
     /****************************** Callback function for live chat *********************************/
-    function live_chat_html() {
+    public function live_chat_html() {
         require_once PLUGIN_PATH . 'template/live-chat.php';
     }
 
     /****************************** Callback function for custom post type *********************************/
-    function cpt_html() {
+    public function cpt_html() {
         require_once PLUGIN_PATH . 'template/custom-post-type.php';
     }
 
     /******************************* Callback function for word count ************************************/
-    function word_count_html() {
+    public function word_count_html() {
         require_once PLUGIN_PATH . 'template/word-count.php';
     }
 
     /****************************** settings, sections and fields for all pages *********************************/
-    function all_pages_settings() {
+    public function all_pages_settings() {
         /****************************** settings, sections and fields for main page *********************************/
         require_once PLUGIN_PATH . 'inc/dasboard-settings.php';
 
@@ -196,12 +235,12 @@ class ByteEngine {
     }
 
     /****************************** Function for adding custom post types *********************************/
-    function create_custom_post_types() {
+    public function create_custom_post_types() {
         require_once PLUGIN_PATH . 'inc/creating-cpts.php';
     }
 
     /****************************** Function for live chat page html *********************************/
-    function live_chat_frontend( $content ) {
+    public function live_chat_frontend( $content ) {
         $link = get_option( 'byte_chat_link' );
         $number = get_option( 'byte_chat_number' );
         $byte_live_chat_div = '<div class="byte_live_chat_div">';
@@ -220,7 +259,7 @@ class ByteEngine {
     }
 
     /******************************* Creating new function for Statistics html ************************************/
-    function word_count_frontend($content) {
+    public function word_count_frontend($content) {
         $html = '
             <div style="background: #F0F0F0; color: #000; margin: 10px 0; padding: 10px 20px; border-radius: 5px;">
                 <h3 style="border-bottom: 1px solid #000; padding-bottom: 10px;">' .get_option('byte_headline', 'Post Statistics'). '</h3>
