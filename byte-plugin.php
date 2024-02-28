@@ -43,6 +43,7 @@ class ByteEngine {
         add_action( 'elementor/widgets/widgets_registered', array($this, 'register_custom_widget') );
         add_action( 'template_redirect', array($this, 'byte_engine_login_user' ));
         add_action( 'template_redirect', array($this, 'byte_engine_redirects' ));
+        add_action( 'admin_notices', array($this, 'sample_admin_notice__success') );
         
         // Filters hooks
         add_filter( 'the_content', array($this, 'live_chat_frontend') );
@@ -59,11 +60,22 @@ class ByteEngine {
         add_shortcode('profile_page', array($this, 'byte_engine_profile_form'));
     }
 
+    function sample_admin_notice__success() {
+        ?>
+        <div class="notice notice-success is-dismissible">
+        <p><?php _e( 'Done!', 'byte_engine' ); ?></p>
+        </div>
+        <?php
+    }
+        
+
     /****************************** Register new widgets for elementor *********************************/
     public function register_custom_widget( $widgets_manager ) {
         require_once( __DIR__ . '/widgets/hello-world-widget.php' );
+        require_once( __DIR__ . '/widgets/image-maker-widget.php' );
     
-        $widgets_manager->register_widget_type( new Elementor_Hello_World_Widget() );
+        $widgets_manager->register_widget_type( new Byte_Engine_Hello_World_Widget() );
+        $widgets_manager->register_widget_type( new Byte_Engine_Image_Maker_Widget() );
     }
 
     /****************************** Add custom page on plugin activation *********************************/
